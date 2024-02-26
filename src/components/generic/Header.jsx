@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { styled, alpha } from '@mui/material/styles'
-import AppBar from '@mui/material/AppBar'
+// import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
 import IconButton from '@mui/material/IconButton'
@@ -16,7 +16,8 @@ import MailIcon from '@mui/icons-material/Mail'
 import NotificationsIcon from '@mui/icons-material/Notifications'
 import MoreIcon from '@mui/icons-material/MoreVert'
 import { useContext } from 'react'
-import { SchoolContext } from '../../../utils/SchoolContext'
+import { SchoolContext } from '../../utils/SchoolContext'
+import MuiAppBar from '@mui/material/AppBar'
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -58,7 +59,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }))
 
-export default function Header() {
+
+
+export default function Header({handleSidenav, open}) {
+
   const [anchorEl, setAnchorEl] = React.useState(null)
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null)
 
@@ -158,9 +162,27 @@ export default function Header() {
     </Menu>
   )
 
+
+  const AppBar = styled(MuiAppBar, {
+    shouldForwardProp: (prop) => prop !== 'open',
+  })(({ theme, open }) => ({
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    ...(open && {
+      width: `calc(100% - 240px)`,
+      marginLeft: `240px`,
+      transition: theme.transitions.create(['margin', 'width'], {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    }),
+  }))
+
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="fixed" open={open}>
         <Toolbar>
           <IconButton
             size="large"
@@ -168,6 +190,7 @@ export default function Header() {
             color="inherit"
             aria-label="open drawer"
             sx={{ mr: 2 }}
+            onClick={handleSidenav}
           >
             <MenuIcon />
           </IconButton>
